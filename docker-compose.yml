@@ -13,3 +13,12 @@ services:
     volumes:
       - .:/app/
       - /app/node_modules
+      
+  postgres:
+    image: postgres:12.5
+    ports:
+      - "35432:5432"    
+    environment:      
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
