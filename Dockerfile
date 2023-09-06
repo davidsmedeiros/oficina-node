@@ -5,8 +5,8 @@ WORKDIR /app
 COPY ./package.json .
 RUN npm cache clean --force
 RUN npm install
+RUN npm i -g sequelize-cli
+
 COPY . .
 
 EXPOSE 3000
-
-CMD [ "node", "index.js" ]
