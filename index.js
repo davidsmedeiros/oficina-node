@@ -9,18 +9,40 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getSample', async (req, res) => {    
-  const value = await db.Main.findAll(
-    {
-      limit:1,
-    }
-  );
-  console.log(value);    
-  res.send(value);
+  const lastSample = await db.Main.findOne({    
+    order: [ [ 'createdAt', 'DESC' ]],
+    raw: true,
+  });
+
+  console.log(`latest id ${lastSample.id}`);  
+
+  res.send(lastSample);
 });
 
 app.get('/createSample', async (req, res) => {
   const sampleMains = await db.Main.create({ name: "sample test"});
   res.send(sampleMains.dataValues);
+});
+
+app.get('/fillDatabase', async (req, res) => {  
+  var qtdSamples = parseInt(req.query.qtdSamples, 10);
+
+  const latestSample = await db.Main.findOne({    
+    order: [ [ 'createdAt', 'DESC' ]],
+    raw: true,
+  });
+
+  let sampleMain = latestSample == null ? 0 : latestSample.id;
+
+  for (let sample = 1; sample < qtdSamples + 1; sample++) {
+    try{
+      sampleMain = await db.Main.create({ name: `sample ${sample}`});
+      console.log(sampleMain.dataValues);      
+    }catch(err){
+      console.log(err);
+    }    
+  }  
+  res.send(sampleMain.dataValues);
 });
 
 db.sequelize.sync({ force: false }).then(function () {
