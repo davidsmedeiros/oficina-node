@@ -1,11 +1,14 @@
-const express = require('express')
+const express = require('express');
 const db = require("./models");
+const bodyParser = require('body-parser');
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-  res.send('Hello World 2!')
+  res.send('Hello World 2!');
 })
 
 app.get('/getSample', async (req, res) => {    
@@ -45,6 +48,16 @@ app.get('/fillDatabase', async (req, res) => {
   res.send(sampleMain.dataValues);
 });
 
+app.post('/eval', async (req, res) => {
+  /*
+    THIS IS NOT RECOMENDED FOR PRODUCTION.
+    THE GOAL HERE IS MAINLY FOR TESTING PURPOSES.
+  */
+  console.log(req.body)
+  const result = await eval(req.body.query);  
+  res.json({ status: "running" });
+});
+
 db.sequelize.sync({ force: false }).then(function () {
   app.listen(process.env.DB_PORT, function () {
     console.log("server is successfully running!");
@@ -52,5 +65,5 @@ db.sequelize.sync({ force: false }).then(function () {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`);
 })
