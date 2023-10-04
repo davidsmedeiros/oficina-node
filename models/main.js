@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Main.init({
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
